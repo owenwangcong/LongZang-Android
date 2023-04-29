@@ -11,8 +11,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
-import java.io.File
 import org.readium.r2.testapp.R
 import org.readium.r2.testapp.databinding.ItemRecycleBookBinding
 import org.readium.r2.testapp.domain.model.Book
@@ -46,15 +44,8 @@ class BookshelfAdapter(
 
         fun bind(book: Book) {
             binding.bookshelfTitleText.text = book.title
-            val coverImageFile =
-                File("${binding.root.context?.filesDir?.path}/covers/${book.id}.png")
-            Picasso.get()
-                .load(coverImageFile)
-                .placeholder(R.drawable.cover)
-                .into(binding.bookshelfCoverImage)
-            binding.root.singleClick {
-                onBookClick(book)
-            }
+            binding.bookshelfCoverImage.setImageResource(R.drawable.cover)
+            binding.root.singleClick { onBookClick(book) }
             binding.root.setOnLongClickListener {
                 onBookLongClick(book)
                 true

@@ -18,5 +18,4 @@ class CatalogRepository(private val catalogDao: CatalogDao) {
 
     fun getCatalogsFromDatabase(): LiveData<List<Catalog>> = catalogDao.getCatalogModels()
 
-    suspend fun deleteCatalog(id: Long) = catalogDao.deleteCatalog(id)
 }

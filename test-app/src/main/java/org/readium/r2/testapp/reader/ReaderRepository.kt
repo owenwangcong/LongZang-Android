@@ -6,11 +6,10 @@
 
 package org.readium.r2.testapp.reader
 
+import androidx.datastore.preferences.core.Preferences as JetpackPreferences
 import android.app.Activity
 import android.app.Application
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences as JetpackPreferences
-import java.io.File
 import org.json.JSONObject
 import org.readium.adapters.pdfium.navigator.PdfiumEngineProvider
 import org.readium.navigator.media2.ExperimentalMedia2
@@ -28,6 +27,7 @@ import org.readium.r2.shared.util.getOrElse
 import org.readium.r2.testapp.MediaService
 import org.readium.r2.testapp.Readium
 import org.readium.r2.testapp.bookshelf.BookRepository
+import org.readium.r2.testapp.opds.OPDSDownloader
 import org.readium.r2.testapp.reader.preferences.EpubPreferencesManagerFactory
 import org.readium.r2.testapp.reader.preferences.PdfiumPreferencesManagerFactory
 
@@ -50,7 +50,7 @@ class ReaderRepository(
 
     private val repository: MutableMap<Long, ReaderInitData> =
         mutableMapOf()
-
+    private val opdsDownloader = OPDSDownloader(application)
     operator fun get(bookId: Long): ReaderInitData? =
         repository[bookId]
 
@@ -71,12 +71,12 @@ class ReaderRepository(
         val book = bookRepository.get(bookId)
             ?: throw Exception("Cannot find book in database.")
 
-        val file = File(book.href)
-        require(file.exists())
+        val file = opdsDownloader.persistPublication(book.title)
         val asset = FileAsset(file)
 
-        val publication = readium.streamer.open(asset, allowUserInteraction = true, sender = activity)
-            .getOrThrow()
+        val publication =
+            readium.streamer.open(asset, allowUserInteraction = true, sender = activity)
+                .getOrThrow()
 
         // The publication is protected with a DRM and not unlocked.
         if (publication.isRestricted) {
@@ -89,12 +89,16 @@ class ReaderRepository(
         val readerInitData = when {
             publication.conformsTo(Publication.Profile.AUDIOBOOK) ->
                 openAudio(bookId, publication, initialLocator)
+
             publication.conformsTo(Publication.Profile.EPUB) ->
                 openEpub(bookId, publication, initialLocator)
+
             publication.conformsTo(Publication.Profile.PDF) ->
                 openPdf(bookId, publication, initialLocator)
+
             publication.conformsTo(Publication.Profile.DIVINA) ->
                 openImage(bookId, publication, initialLocator)
+
             else ->
                 throw Exception("Publication is not supported.")
         }
@@ -168,9 +172,11 @@ class ReaderRepository(
             is MediaReaderInitData -> {
                 mediaBinder.closeNavigator()
             }
+
             is VisualReaderInitData -> {
                 initData.publication.close()
             }
+
             null, is DummyReaderInitData -> {
                 // Do nothing
             }

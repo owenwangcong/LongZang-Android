@@ -36,6 +36,13 @@ interface BooksDao {
     suspend fun deleteBook(bookId: Long)
 
     /**
+     * Updates a book
+     * @param bookId The ID of the book
+     */
+    @Query("UPDATE ${Book.TABLE_NAME} SET ${Book.IS_IN_SHELF} = :isInShelf, ${Book.ADD_IN_SHELF_DATE} = :addTime WHERE ${Book.ID} = :bookId")
+    suspend fun updateBook(bookId: Long, isInShelf: Int, addTime: Long)
+
+    /**
      * Retrieve a book from its ID.
      */
     @Query("SELECT * FROM " + Book.TABLE_NAME + " WHERE " + Book.ID + " = :id")
@@ -47,6 +54,20 @@ interface BooksDao {
      */
     @Query("SELECT * FROM " + Book.TABLE_NAME + " ORDER BY " + Book.CREATION_DATE + " desc")
     fun getAllBooks(): LiveData<List<Book>>
+
+    /**
+     * Retrieve all books by catalog
+     * @return List of books as LiveData
+     */
+    @Query("SELECT * FROM " + Book.TABLE_NAME + " WHERE " + Book.CATALOG + " = :catalog" + " ORDER BY " + Book.CREATION_DATE + " desc")
+    fun getAllBooksByCatalog(catalog: Long): LiveData<List<Book>>
+
+    /**
+     * Retrieve all books in bookshelf
+     * @return List of books as LiveData
+     */
+    @Query("SELECT * FROM " + Book.TABLE_NAME + " WHERE " + Book.IS_IN_SHELF + " = 1" + " ORDER BY " + Book.ADD_IN_SHELF_DATE + " desc")
+    fun getAllBooksInBookshelf(): LiveData<List<Book>>
 
     /**
      * Retrieve all bookmarks for a specific book

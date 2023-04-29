@@ -104,7 +104,7 @@ private fun <P : Configurable.Preferences<P>, E : PreferencesEditor<P>> UserPref
                             fontWeight = editor.fontWeight,
                             hyphens = editor.hyphens,
                             imageFilter = editor.imageFilter,
-                            language = editor.language,
+                            language = null,
                             letterSpacing = editor.letterSpacing,
                             ligatures = editor.ligatures,
                             lineHeight = editor.lineHeight,
@@ -125,7 +125,7 @@ private fun <P : Configurable.Preferences<P>, E : PreferencesEditor<P>> UserPref
                     EpubLayout.FIXED ->
                         FixedLayoutUserPreferences(
                             commit = commit,
-                            language = editor.language,
+                            language = null,
                             readingProgression = editor.readingProgression,
                             spread = editor.spread,
                         )

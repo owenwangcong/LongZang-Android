@@ -11,23 +11,31 @@
 package org.readium.r2.testapp.opds
 
 import android.content.Context
+import android.content.res.AssetManager
 import java.io.File
 import java.io.FileOutputStream
-import java.util.*
+import java.util.Properties
+import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import org.readium.r2.shared.util.Try
 import org.readium.r2.shared.util.flatMap
-import org.readium.r2.shared.util.http.*
+import org.readium.r2.shared.util.http.DefaultHttpClient
+import org.readium.r2.shared.util.http.HttpClient
+import org.readium.r2.shared.util.http.HttpException
+import org.readium.r2.shared.util.http.HttpRequest
+import org.readium.r2.shared.util.http.HttpResponse
+import org.readium.r2.shared.util.http.HttpTry
 import org.readium.r2.shared.util.mediatype.MediaType
 import org.readium.r2.testapp.BuildConfig.DEBUG
 import timber.log.Timber
 
+
 class OPDSDownloader(context: Context) {
 
     private val useExternalFileDir = useExternalDir(context)
-
+    private val assetManager: AssetManager = context.assets
     private val rootDir: String = if (useExternalFileDir) {
         context.getExternalFilesDir(null)?.path + "/"
     } else {
@@ -39,6 +47,23 @@ class OPDSDownloader(context: Context) {
         val inputStream = context.assets.open("configs/config.properties")
         properties.load(inputStream)
         return properties.getProperty("useExternalFileDir", "false")!!.toBoolean()
+    }
+
+    fun persistPublication(fileName: String): File {
+        val dir = File("$rootDir/epubs")
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        val file = File(dir, "$fileName.epubs")
+        if (!file.exists()) {
+            assetManager.open("epubs/$fileName.epub").use { inputStream ->
+                FileOutputStream(file).use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                    outputStream.flush()
+                }
+            }
+        }
+        return file
     }
 
     suspend fun publicationUrl(

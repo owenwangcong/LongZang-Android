@@ -57,11 +57,7 @@ class ReaderViewModel(
     val fragmentChannel: EventChannel<FeedbackEvent> =
         EventChannel(Channel(Channel.BUFFERED), viewModelScope)
 
-    val tts: TtsViewModel? = TtsViewModel(
-        context = application,
-        publication = readerInitData.publication,
-        scope = viewModelScope
-    )
+    val tts: TtsViewModel? = null
 
     val settings: UserPreferencesViewModel<*, *>? = UserPreferencesViewModel(
         viewModelScope = viewModelScope,

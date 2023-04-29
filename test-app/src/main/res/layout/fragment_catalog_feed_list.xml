@@ -15,13 +15,4 @@
         tools:context="org.readium.r2.testapp.opds"
         tools:listitem="@layout/item_recycle_button" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/catalogFeed_addCatalogFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/add_catalog"
-        android:src="@drawable/ic_add_white_24dp" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

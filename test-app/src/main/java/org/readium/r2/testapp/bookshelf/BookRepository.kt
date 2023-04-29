@@ -13,33 +13,24 @@ import org.joda.time.DateTime
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.Publication
 import org.readium.r2.shared.publication.indexOfFirstWithHref
-import org.readium.r2.shared.util.mediatype.MediaType
 import org.readium.r2.testapp.db.BooksDao
 import org.readium.r2.testapp.domain.model.Book
 import org.readium.r2.testapp.domain.model.Bookmark
 import org.readium.r2.testapp.domain.model.Highlight
-import org.readium.r2.testapp.utils.extensions.authorName
 
 class BookRepository(private val booksDao: BooksDao) {
 
-    fun books(): LiveData<List<Book>> = booksDao.getAllBooks()
+    fun booksInShelf(): LiveData<List<Book>> = booksDao.getAllBooksInBookshelf()
+
+    suspend fun addToBookShelf(bookId: Long) {
+        booksDao.updateBook(bookId, 1, System.currentTimeMillis())
+    }
 
     suspend fun get(id: Long) = booksDao.get(id)
 
-    suspend fun insertBook(href: String, mediaType: MediaType, publication: Publication): Long {
-        val book = Book(
-            creation = DateTime().toDate().time,
-            title = publication.metadata.title,
-            author = publication.metadata.authorName,
-            href = href,
-            identifier = publication.metadata.identifier ?: "",
-            type = mediaType.toString(),
-            progression = "{}"
-        )
-        return booksDao.insertBook(book)
+    suspend fun deleteBookInShelf(bookId: Long) {
+        booksDao.updateBook(bookId, 0, System.currentTimeMillis())
     }
-
-    suspend fun deleteBook(id: Long) = booksDao.deleteBook(id)
 
     suspend fun saveProgression(locator: Locator, bookId: Long) =
         booksDao.saveProgression(locator.toJSON().toString(), bookId)

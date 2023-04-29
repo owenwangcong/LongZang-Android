@@ -17,7 +17,7 @@ import org.readium.r2.testapp.R
 import org.readium.r2.testapp.databinding.ItemRecycleButtonBinding
 import org.readium.r2.testapp.domain.model.Catalog
 
-class CatalogFeedListAdapter(private val onLongClick: (Catalog) -> Unit) :
+class CatalogFeedListAdapter :
     ListAdapter<Catalog, CatalogFeedListAdapter.ViewHolder>(CatalogListDiff()) {
 
     override fun onCreateViewHolder(
@@ -45,10 +45,6 @@ class CatalogFeedListAdapter(private val onLongClick: (Catalog) -> Unit) :
                 val bundle = bundleOf(CATALOGFEED to catalog)
                 Navigation.findNavController(it)
                     .navigate(R.id.action_navigation_catalog_list_to_navigation_catalog, bundle)
-            }
-            binding.catalogListButton.setOnLongClickListener {
-                onLongClick(catalog)
-                true
             }
         }
     }
