@@ -97,7 +97,7 @@ data class EpubPreferences(
             fontSize = other.fontSize ?: fontSize,
             hyphens = other.hyphens ?: hyphens,
             imageFilter = other.imageFilter ?: imageFilter,
-            language = other.language ?: language,
+            language = null,
             letterSpacing = other.letterSpacing ?: letterSpacing,
             ligatures = other.ligatures ?: ligatures,
             lineHeight = other.lineHeight ?: lineHeight,

@@ -29,8 +29,12 @@ import org.readium.r2.navigator.preferences.FontFamily
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.Locator
 import org.readium.r2.shared.publication.epub.pageList
+import org.readium.r2.testapp.FANGSONG
+import org.readium.r2.testapp.KAISONG
+import org.readium.r2.testapp.LISHU
 import org.readium.r2.testapp.LITERATA
 import org.readium.r2.testapp.R
+import org.readium.r2.testapp.XIYUAN
 import org.readium.r2.testapp.reader.preferences.UserPreferencesViewModel
 import org.readium.r2.testapp.search.SearchFragment
 
@@ -85,6 +89,34 @@ class EpubReaderFragment : VisualReaderFragment(), EpubNavigatorFragment.Listene
                         addFontFace {
                             addSource("fonts/Literata-Italic-VariableFont_opsz,wght.ttf")
                             setFontStyle(FontStyle.ITALIC)
+                            setFontWeight(200..900)
+                        }
+                    }
+                    addFontFamilyDeclaration(FontFamily.KAISONG) {
+                        addFontFace {
+                            addSource("fonts/AaKaiSong·2WanZi-2.ttf")
+                            setFontStyle(FontStyle.NORMAL)
+                            setFontWeight(200..900)
+                        }
+                    }
+                    addFontFamilyDeclaration(FontFamily.LISHU) {
+                        addFontFace {
+                            addSource("fonts/AaQianLiJiangShanXiaoLiShu-2.ttf")
+                            setFontStyle(FontStyle.NORMAL)
+                            setFontWeight(200..900)
+                        }
+                    }
+                    addFontFamilyDeclaration(FontFamily.XIYUAN) {
+                        addFontFace {
+                            addSource("fonts/RuiZiYunZiKuXiYuanTiGBK-1.ttf")
+                            setFontStyle(FontStyle.NORMAL)
+                            setFontWeight(200..900)
+                        }
+                    }
+                    addFontFamilyDeclaration(FontFamily.FANGSONG) {
+                        addFontFace {
+                            addSource("fonts/XinHuaFangSongTi-1.ttf")
+                            setFontStyle(FontStyle.NORMAL)
                             setFontWeight(200..900)
                         }
                     }

@@ -42,3 +42,11 @@ class Readium(context: Context) {
 
 @OptIn(ExperimentalReadiumApi::class)
 val FontFamily.Companion.LITERATA: FontFamily get() = FontFamily("Literata")
+@OptIn(ExperimentalReadiumApi::class)
+val FontFamily.Companion.KAISONG: FontFamily get() = FontFamily("Aa楷宋")
+@OptIn(ExperimentalReadiumApi::class)
+val FontFamily.Companion.LISHU: FontFamily get() = FontFamily("千里江山隶书")
+@OptIn(ExperimentalReadiumApi::class)
+val FontFamily.Companion.XIYUAN: FontFamily get() = FontFamily("新华仿宋")
+@OptIn(ExperimentalReadiumApi::class)
+val FontFamily.Companion.FANGSONG: FontFamily get() = FontFamily("锐字云字库楷体GBK")

@@ -8,6 +8,8 @@
 
 package org.readium.r2.testapp.reader.preferences
 
+import org.readium.r2.navigator.preferences.Color as ReadiumColor
+import org.readium.r2.navigator.preferences.TextAlign as ReadiumTextAlign
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -25,12 +27,13 @@ import java.util.*
 import org.readium.adapters.pdfium.navigator.PdfiumPreferencesEditor
 import org.readium.r2.navigator.epub.EpubPreferencesEditor
 import org.readium.r2.navigator.preferences.*
-import org.readium.r2.navigator.preferences.Color as ReadiumColor
-import org.readium.r2.navigator.preferences.TextAlign as ReadiumTextAlign
 import org.readium.r2.shared.ExperimentalReadiumApi
 import org.readium.r2.shared.publication.epub.EpubLayout
 import org.readium.r2.shared.util.Language
-import org.readium.r2.testapp.LITERATA
+import org.readium.r2.testapp.FANGSONG
+import org.readium.r2.testapp.KAISONG
+import org.readium.r2.testapp.LISHU
+import org.readium.r2.testapp.XIYUAN
 import org.readium.r2.testapp.reader.ReaderViewModel
 import org.readium.r2.testapp.utils.compose.ColorPicker
 import org.readium.r2.testapp.utils.compose.DropdownMenuButton
@@ -122,6 +125,7 @@ private fun <P : Configurable.Preferences<P>, E : PreferencesEditor<P>> UserPref
                             verticalText = editor.verticalText,
                             wordSpacing = editor.wordSpacing,
                         )
+
                     EpubLayout.FIXED ->
                         FixedLayoutUserPreferences(
                             commit = commit,
@@ -399,17 +403,15 @@ private fun ColumnScope.ReflowableUserPreferences(
                 title = "Typeface",
                 preference = fontFamily
                     .withSupportedValues(
-                        FontFamily.LITERATA,
-                        FontFamily.SANS_SERIF,
-                        FontFamily.IA_WRITER_DUOSPACE,
-                        FontFamily.ACCESSIBLE_DFA,
-                        FontFamily.OPEN_DYSLEXIC
+                        FontFamily.KAISONG,
+                        FontFamily.LISHU,
+                        FontFamily.XIYUAN,
+                        FontFamily.FANGSONG
                     ),
                 commit = commit
             ) { value ->
                 when (value) {
-                    null -> "Original"
-                    FontFamily.SANS_SERIF -> "Sans Serif"
+                    null -> "默认"
                     else -> value.name
                 }
             }
@@ -954,29 +956,31 @@ class Preset(
 /**
  * Returns the presets associated with the [Configurable.Settings] receiver.
  */
-val <P : Configurable.Preferences<P>> PreferencesEditor<P>.presets: List<Preset> get() =
-    when (this) {
-        is EpubPreferencesEditor ->
-            when (layout) {
-                EpubLayout.FIXED -> emptyList()
-                EpubLayout.REFLOWABLE -> listOf(
-                    Preset("Increase legibility") {
-                        wordSpacing.set(0.6)
-                        fontSize.set(1.4)
-                        fontWeight.set(2.0)
-                    },
-                    Preset("Document") {
-                        scroll.set(true)
-                    },
-                    Preset("Ebook") {
-                        scroll.set(false)
-                    },
-                    Preset("Manga") {
-                        scroll.set(false)
-                        readingProgression.set(ReadingProgression.RTL)
-                    }
-                )
-            }
-        else ->
-            emptyList()
-    }
+val <P : Configurable.Preferences<P>> PreferencesEditor<P>.presets: List<Preset>
+    get() =
+        when (this) {
+            is EpubPreferencesEditor ->
+                when (layout) {
+                    EpubLayout.FIXED -> emptyList()
+                    EpubLayout.REFLOWABLE -> listOf(
+                        Preset("Increase legibility") {
+                            wordSpacing.set(0.6)
+                            fontSize.set(1.4)
+                            fontWeight.set(2.0)
+                        },
+                        Preset("Document") {
+                            scroll.set(true)
+                        },
+                        Preset("Ebook") {
+                            scroll.set(false)
+                        },
+                        Preset("Manga") {
+                            scroll.set(false)
+                            readingProgression.set(ReadingProgression.RTL)
+                        }
+                    )
+                }
+
+            else ->
+                emptyList()
+        }
